@@ -5,11 +5,27 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\DataTables\UserDataTable;
+use App\Models\Administration;
+use App\Models\Branch;
+use App\Models\Department;
+use App\Models\Publicadministration;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
 
 class UserController extends Controller
 {
+
+    public function __construct()
+    {
+        // adding middleware to users
+
+        $this->middleware(['permission:users_create'])->only(['create','store']);
+        $this->middleware(['permission:users_update'])->only(['edit','update']);
+        $this->middleware(['permission:users_read'])->only('index');
+        $this->middleware(['permission:users_delete'])->only('destroy');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -42,6 +58,22 @@ class UserController extends Controller
      */
     public function create()
     {
+        // $user = Auth::user();
+
+        // if ($user->hasRole(['super_admin','admin'])) {
+        //     $publicadministrations = Publicadministration::all();
+        //     $administrations = Administration::all();
+        //     $departments = Department::all();
+        //     $branches = Branch::all();
+        // } else {
+        //     $publicadministrations = $user->publicadministrations;
+        //     $dministrations = $user->administrations;
+        //     $departments = $user->departments;
+        //     $branches = $user->branches;
+        // }
+
+        // dd($publicadministrations,$dministrations,$departments,$branches);
+
         return view('pages.users.create');
     }
 
@@ -62,9 +94,14 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $user)
     {
-        //
+        if (!Auth::user()->owns($user)) {
+            abort(403);
+        }
+
+
+        dd($user);
     }
 
     /**

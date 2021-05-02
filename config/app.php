@@ -180,6 +180,9 @@ return [
         Yajra\DataTables\DataTablesServiceProvider::class,
         Yajra\DataTables\ButtonsServiceProvider::class,
 
+        // watson/active
+        Watson\Active\ActiveServiceProvider::class,
+
     ],
 
     /*
@@ -234,6 +237,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'DataTable' => Yajra\DataTables\DataTablesServiceProvider::class,
+
+        'Active' => Watson\Active\Facades\Active::class,
 
     ],
 

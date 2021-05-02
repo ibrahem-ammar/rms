@@ -6,6 +6,9 @@ use App\Models\Administration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laratrust\Laratrust;
+use App\Models\Branch;
+use App\Models\Publicadministration;
+use App\Models\User;
 
 class AdministrationController extends Controller
 {
@@ -45,7 +48,10 @@ class AdministrationController extends Controller
      */
     public function create()
     {
-        return view('pages.administrations.create');
+        $publicadministrations = Publicadministration::all();
+        $branches = Branch::all();
+        $users = User::all();
+        return view('pages.administrations.create',compact('publicadministrations','branches','users'));
 
     }
 

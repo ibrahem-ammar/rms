@@ -51,5 +51,20 @@ class User extends Authenticatable
         return $this->hasMany(PublicAdministration::class);
     }
 
+    public function administrations()
+    {
+        return $this->hasMany(Administration::class);
+    }
+
+    public function branches()
+    {
+        return $this->hasMany(Branch::class);
+    }
+
+    public function departments()
+    {
+        return $this->hasMany(Department::class);
+    }
+
 
 }

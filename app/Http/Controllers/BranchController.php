@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Branch;
+use App\Models\User;
+use App\Models\Publicadministration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -33,7 +35,9 @@ class BranchController extends Controller
      */
     public function create()
     {
-        return view('pages.branches.create');
+        $publicadministrations = Publicadministration::all();
+        $users = User::all();
+        return view('pages.branches.create',compact('publicadministrations','users'));
     }
 
     /**

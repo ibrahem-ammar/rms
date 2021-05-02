@@ -16,7 +16,9 @@ Route::get('/password/reste/{token}', [App\Http\Controllers\Auth\ResetPasswordCo
 
 
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', function(){
+    return view('layouts.app');
+})->name('home');
 
 Route::middleware(['auth'])->group(function () {
 
@@ -29,6 +31,14 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('departments', App\Http\Controllers\DepartmentController::class);
 
     Route::resource('users', App\Http\Controllers\UserController::class);
+
+    Route::resource('tasks', App\Http\Controllers\TaskController::class);
+
+    Route::resource('reports', App\Http\Controllers\ReportController::class);
+
+    Route::resource('permissions', App\Http\Controllers\PermissionController::class);
+
+    Route::get('logs',[App\Http\Controllers\LogController::class,'index'])->name('logs');
 
 });
 

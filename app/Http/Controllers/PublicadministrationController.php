@@ -45,7 +45,7 @@ class PublicAdministrationController extends Controller
     public function create()
     {
         $users = User::all();
-        return view('pages.publicadministration.create',compact('users'));
+        return view('pages.publicadministrations.create',compact('users'));
     }
 
     /**
@@ -85,7 +85,7 @@ class PublicAdministrationController extends Controller
         }
 
 
-        dd($publicadministration);
+        dd($publicadministration->manager);
         // $users = User::all();
         // return view('pages.publicadministration.create',compact('users','publicadministration'));
     }
