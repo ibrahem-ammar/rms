@@ -32,13 +32,13 @@ class AdministrationController extends Controller
     public function index()
     {
         if (Auth::user()->hasPermission('administrations_read_all')) {
-            $administrations = Administration::all();
+            $administrations = Administration::paginate();
         } else {
-            $administrations = Auth::user()->administrations;
+            $administrations = Auth::user()->administrations()->paginate();
         }
 
-        dd($administrations);
-        // return view('pages.administrations.index');
+        // dd($administrations);
+        return view('pages.administrations.index',compact('administrations'));
     }
 
     /**
@@ -63,7 +63,25 @@ class AdministrationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'user_id' => 'required',
+            'publicadministration_id' => 'required',
+            'branch_id' => 'required',
+        ]);
+
+
+        Administration::create([
+            'name' => $request->name,
+            'user_id' => $request->user_id,
+            'publicadministration_id' => $request->publicadministration_id,
+            'branch_id' => $request->branch_id,
+        ]);
+
+        return redirect()->route('administrations.index')->with([
+            'status' => 'success',
+            'massage' => 'administration_added_successfully'
+        ]);
     }
 
     /**
@@ -74,12 +92,13 @@ class AdministrationController extends Controller
      */
     public function show(Administration $administration)
     {
-        if (!Auth::user()->owns($administration)) {
+        if (!(Auth::user()->owns($administration) OR Auth::user()->hasPermission('administrations_show_all'))) {
             abort(403);
         }
 
-        dd($administration);
-        // return view('pages.administrations.show');
+        $departments = $administration->departments()->paginate();
+        // dd($administration,$departments);  
+        return view('pages.administrations.show',compact('departments','administration'));
     }
 
     /**
@@ -90,7 +109,17 @@ class AdministrationController extends Controller
      */
     public function edit(Administration $administration)
     {
-        return view('pages.administrations.edit');
+        if (!(Auth::user()->hasPermission('administrations_update_all') OR Auth::user()->owns($administration))) {
+            abort(403);
+        }
+        // dd($branch->publicadministration->id);
+        $users = $publicadministrations = $branches = '';
+        if (Auth::user()->hasPermission('administrations_update_all')) {
+            $users = User::all() ;
+            $publicadministrations = Publicadministration::all() ;
+            $branches = Branch::all() ;
+        }
+        return view('pages.administrations.edit',compact('administration','users','publicadministrations','branches'));
     }
 
     /**
@@ -102,7 +131,25 @@ class AdministrationController extends Controller
      */
     public function update(Request $request, Administration $administration)
     {
-        //
+        $validation_roles = (Auth::user()->hasPermission('administrations_update_all')) ? ['name' => 'required'
+            ,'user_id' =>'required','publicadministration_id' =>'required',
+            'branch_id' =>'required',] : ['name' => 'required'] ;
+        
+        $request->validate($validation_roles);
+
+        $data = (Auth::user()->hasPermission('administrations_update_all')) ? [
+                    'name' => $request->name,
+                    'user_id' => $request->user_id,
+                    'publicadministration_id' => $request->publicadministration_id,
+                    'branch_id' => $request->branch_id,
+                ] : ['name' => $request->name] ;
+
+        $administration->update($data);
+
+        return redirect()->route('administrations.index')->with([
+            'status' => 'success',
+            'massage' => 'dministration_updated_successfully'
+        ]);
     }
 
     /**

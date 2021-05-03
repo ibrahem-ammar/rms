@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
+use App\Models\USer;
+use App\Models\Administration;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Publicadministration;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
@@ -14,7 +18,14 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        return view('pages.departments.index');
+        if (Auth::user()->hasPermission('departments_read_all')) {
+            $departments = Department::paginate();
+        } else {
+            $departments = Auth::user()->departments()->paginate();
+        }
+
+        // dd($departments);
+        return view('pages.departments.index',compact('departments'));
 
     }
 
@@ -25,7 +36,11 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        return view('pages.departments.create');
+        $publicadministrations = Publicadministration::all();
+        $administrations = Administration::all();
+        $users = User::all();
+        return view('pages.departments.create',compact('publicadministrations','administrations','users'));
+
     }
 
     /**
@@ -36,7 +51,25 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'user_id' => 'required',
+            'publicadministration_id' => 'required',
+            'administration_id' => 'required',
+        ]);
+
+
+        Department::create([
+            'name' => $request->name,
+            'user_id' => $request->user_id,
+            'publicadministration_id' => $request->publicadministration_id,
+            'administration_id' => $request->administration_id,
+        ]);
+
+        return redirect()->route('departments.index')->with([
+            'status' => 'success',
+            'massage' => 'department_added_successfully'
+        ]);
     }
 
     /**
@@ -47,7 +80,13 @@ class DepartmentController extends Controller
      */
     public function show(Department $department)
     {
-        return view('pages.departments.show');
+        if (!(Auth::user()->owns($department) OR Auth::user()->hasPermission('administrations_show_all'))) {
+            abort(403);
+        }
+
+        // $departments = $administration->departments()->paginate();
+        // // dd($administration,$departments);  
+        // return view('pages.administrations.show',compact('departments','administration'));
     }
 
     /**
@@ -58,7 +97,19 @@ class DepartmentController extends Controller
      */
     public function edit(Department $department)
     {
-        return view('pages.departments.edit');
+        
+        if (!(Auth::user()->hasPermission('administrations_update_all') OR Auth::user()->owns($department))) {
+            abort(403);
+        }
+        // dd($branch->publicadministration->id);
+        $users = $publicadministrations = $administrations = '';
+        if (Auth::user()->hasPermission('administrations_update_all')) {
+            $publicadministrations = Publicadministration::all();
+            $administrations = Administration::all();
+            $users = User::all();
+        }
+        return view('pages.departments.edit',compact('department','administrations','users','publicadministrations'));
+    
     }
 
     /**
@@ -70,7 +121,25 @@ class DepartmentController extends Controller
      */
     public function update(Request $request, Department $department)
     {
-        //
+        $validation_roles = (Auth::user()->hasPermission('departments_update_all')) ? ['name' => 'required'
+            ,'user_id' =>'required','publicadministration_id' =>'required',
+            'administration_id' =>'required',] : ['name' => 'required'] ;
+        
+        $request->validate($validation_roles);
+
+        $data = (Auth::user()->hasPermission('departments_update_all')) ? [
+                    'name' => $request->name,
+                    'user_id' => $request->user_id,
+                    'publicadministration_id' => $request->publicadministration_id,
+                    'administration_id' => $request->administration_id,
+                ] : ['name' => $request->name] ;
+
+        $department->update($data);
+
+        return redirect()->route('departments.index')->with([
+            'status' => 'success',
+            'massage' => 'department_updated_successfully'
+        ]);
     }
 
     /**

@@ -1,18 +1,11 @@
 @extends('layouts.app')
 
-@section('title') @lang('site.users') @endsection
+@section('sryles')
+    <!-- Select2 -->
+    <link rel="stylesheet" href="  {{ asset('adminlte/plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="  {{ asset('adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 
-@section('links')
-<li class="breadcrumb-item"><a href="{{ route('users.index') }}">@lang('site.users')</a></li>
-<li class="breadcrumb-item active">@lang('site.add_user')</li>
 @endsection
-
-
-
-
-
-
-
 
 @section('content')
 <div class="row">
@@ -72,11 +65,13 @@
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="working_at">@lang('site.working_at')</label>
-                                <select id="working_at" class="form-control custom-select" name="working_at">
+                                <select id="working_at" class="form-control select2" name="working_at">
                                     <option selected disabled hidden>@lang('site.choose')</option>
-                                    <option>On Hold</option>
-                                    <option>Canceled</option>
-                                    <option>Success</option>
+                                    <option value="publicadministration">@lang('site.publicadministration')</option>
+                                    <option value="branch">@lang('site.branch')</option>
+                                    <option value="administration">@lang('site.administration')</option>
+                                    <option value="department">@lang('site.department')</option>
+                                    
                                 </select>
                             </div>
                         </div>
@@ -84,11 +79,9 @@
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="section_id">@lang('site.section_id')</label>
-                                <select id="section_id" class="form-control custom-select" name="section_id" disabled>
+                                <select id="section_id" class="form-control select2" name="section_id" disabled>
                                     <option selected disabled hidden>@lang('site.choose')</option>
-                                    <option>On Hold</option>
-                                    <option>Canceled</option>
-                                    <option>Success</option>
+                                    
                                 </select>
                             </div>
                         </div>
@@ -98,23 +91,23 @@
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="permissions">@lang('site.permissions')</label>
-                                <select id="permissions" class="form-control custom-select" name="permissions">
+                                <select id="permissions" class="form-control select2" name="permissions[]" multiple="multiple">
                                     <option selected disabled hidden>@lang('site.permissions')</option>
-                                    <option>On Hold</option>
-                                    <option>Canceled</option>
-                                    <option>Success</option>
+                                    @foreach ($permissions as $permission)
+                                    <option value="{{ $permission->name }}">@lang('site.'.$permission->name)</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
 
                         <div class="col-6">
-                            <div class="form-group">
-                                <label for="roles">@lang('site.roles')</label>
-                                <select id="roles" class="form-control custom-select" name="roles">
-                                    <option selected disabled hidden>@lang('site.roles')</option>
-                                    <option>On Hold</option>
-                                    <option>Canceled</option>
-                                    <option>Success</option>
+                            <div class="form-group" id="myModal">
+                                <label  for="roles">@lang('site.roles')</label>
+                                <select class="form-control select2" id="roles"  name="roles[]" multiple="multiple">
+                                    <option disabled hidden>@lang('site.roles')</option>
+                                    @foreach ($roles as $role)
+                                    <option value="{{ $role->name }}">@lang('site.'.$role->name)</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -134,3 +127,18 @@
     </div>
   </div>
 @endsection
+
+@section('scriptlinks')
+    {{-- <script src="{{asset('adminlte/plugins/select2/js/select2.full.min.js')}}"></script> --}}
+@endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2({
+                dir: "ltr",
+                theme: 'bootstrap4',
+            })
+        });
+    </script>
+@endpush

@@ -1,33 +1,34 @@
 @extends('layouts.app')
 
-@section('title') @lang('site.administrations') @endsection
-
-@section('links')
-<li class="breadcrumb-item"><a href="{{ route('administrations.index') }}">@lang('site.administrations')</a></li>
-<li class="breadcrumb-item active">@lang('site.add')</li>
-@endsection
-
-
 @section('content')
-
 <div class="row">
     <div class="col-md-12">
         <div class="card card-primary">
             <div class="card-body">
-                <form action="">
+                <form action=" {{route('administrations.store')}} " method="post" id="submit">
                     @csrf
                     <div class="row">
                         <div class="col-6">
+                            <!-- name of administration -->
                             <div class="form-group">
                                 <label for="name">@lang('site.administration_name')</label>
-                                <input type="text" class="form-control" id="name" name="name" placeholder="@lang('site.administration_name')">
+                                <input type="text" class="form-control
+                                @error('name') is-invalid @enderror"
+                                id="name" name="name"
+                                @error('name')aria-invalid="true"@enderror
+                                placeholder="@lang('site.administration_name')" required>
+                                                                
                             </div>
                         </div>
 
                         <div class="col-6">
+                            <!-- select the manager of the administration -->
+
                             <div class="form-group">
-                                <label>@lang('site.select_user')</label>
-                                <select class="form-control" name="user_id">
+                                <label for="user_id">@lang('site.select_administration_manager')</label>
+                                <select class="form-control select2" name="user_id" id="user_id" required>
+                                    <option value="" selected disabled hidden>@lang('site.select_administration_manager')</option>
+                                
                                     @forelse ($users as $user)
                                         <option value="{{ $user->id }}">{{ $user->name }}</option>
                                     @empty
@@ -36,44 +37,52 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row">
 
                         <div class="col-6">
+                            <!-- select the public administration of the administration -->
+
                             <div class="form-group">
-                                <label>@lang('site.select_publicadministration')</label>
-                                <select class="form-control" name="publicadministration_id">
+                                <label for="publicadministration_id">@lang('site.select_publicadministration')</label>
+                                <select class="form-control select2" name="publicadministration_id" id="publicadministration_id" required>
+                                    <option value="" selected disabled hidden>@lang('site.select_publicadministration')</option>
+                                
                                     @forelse ($publicadministrations as $publicadministration)
                                         <option value="{{ $publicadministration->id }}">{{ $publicadministration->name }}</option>
                                     @empty
-                                        <option value="">@lang('site.no_publicadministration')</option>
+                                        <option value="">@lang('site.no_publicadministrations')</option>
                                     @endforelse
                                 </select>
                             </div>
                         </div>
 
                         <div class="col-6">
+                            <!-- select the public administration of the administration -->
+
                             <div class="form-group">
-                                <label>@lang('site.select_branch')</label>
-                                <select class="form-control" name="branch_id">
+                                <label for="branch_id">@lang('site.select_branch')</label>
+                                <select class="form-control select2" name="branch_id" id="branch_id" required>
+                                    <option value="" selected disabled hidden>@lang('site.select_branch')</option>
+                                
                                     @forelse ($branches as $branch)
                                         <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                                     @empty
-                                        <option value="">@lang('site.no_branch')</option>
+                                        <option value="">@lang('site.no_branches')</option>
                                     @endforelse
                                 </select>
                             </div>
                         </div>
-                    </div>
-
+                    </div> 
 
                     <div class="row">
                         <div class="col-12">
-                            <a href="{{ route('users.index') }}" class="btn btn-secondary">@lang('site.cancel')</a>
-                            <input type="submit" value="@lang('site.submit')" class="btn btn-success float-right ml-2">
+                            <button type="button" class="btn btn-secondary cancel">@lang('site.cancel')</button>
+                            <button type="button" class="btn btn-success float-right ml-2 add">@lang('site.submit')</button>
                         </div>
                     </div>
+                </form>
+                {{--  cancel button --}}
+                <form action="{{route('administrations.index')}}" method="get" id="cancel" class="d-none">
+                @csrf
                 </form>
             </div>
         <!-- /.card-body -->
@@ -82,3 +91,48 @@
     </div>
   </div>
 @endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2({
+                dir: "ltr",
+                theme: 'bootstrap4',
+            });
+            $(document).on('click','.cancel',function(){
+                Swal.fire({
+                title: "{{ trans('site.are_you_sure') }}",
+                text: "{{ trans('site.unable_to_revert') }}",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: "{{ trans('site.cancel') }}",
+                confirmButtonText: "{{ trans('site.confirm') }}"
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#cancel').submit();
+                }
+            })
+            });
+
+            
+            $(document).on('click','.add',function(){
+                Swal.fire({
+                title: "{{ trans('site.are_you_sure') }}",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                cancelButtonText: "{{ trans('site.cancel') }}",
+                confirmButtonText: "{{ trans('site.confirm') }}"
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#submit').submit();
+                }
+            })
+            });
+            
+        });
+    </script>
+@endpush

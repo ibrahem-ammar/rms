@@ -16,9 +16,9 @@ class PublicAdministrationController extends Controller
         // adding middleware to public administrations
 
         $this->middleware(['permission:publicadministrations_create'])->only(['create','store']);
-        $this->middleware(['permission:publicadministrations_update'])->only(['edit','update']);
-        $this->middleware(['permission:publicadministrations_read'])->only('index');
-        $this->middleware(['permission:publicadministrations_delete'])->only('destroy');
+        $this->middleware(['permission:publicadministrations_update|publicadministrations_update_all'])->only(['edit','update']);
+        $this->middleware(['permission:publicadministrations_read|publicadministrations_read_all'])->only('index');
+        $this->middleware(['permission:publicadministrations_delete|publicadministrations_delete_all'])->only('destroy');
     }
     /**
      * Display a listing of the resource.
@@ -28,13 +28,13 @@ class PublicAdministrationController extends Controller
     public function index()
     {
         if (Auth::user()->hasPermission('publicadministrations_read_all')) {
-            $publicadministrations = Publicadministration::all();
+            $publicadministrations = Publicadministration::paginate();
         } else {
-            $publicadministrations = Auth::user()->publicadministrations;
+            $publicadministrations = Auth::user()->publicadministrations()->paginate();
         }
 
-        dd($publicadministrations);
-        return view('pages.publicadministration.index');
+        // dd($publicadministrations);
+        return view('pages.publicadministrations.index',compact('publicadministrations'));
     }
 
     /**
@@ -61,12 +61,13 @@ class PublicAdministrationController extends Controller
             'user_id' => 'required'
         ]);
 
+
         Publicadministration::create([
             'name' => $request->name,
             'user_id' => $request->user_id
         ]);
 
-        return redirect()->back()->with([
+        return redirect()->route('publicadministrations.index')->with([
             'status' => 'success',
             'massage' => 'publicadministration_added_successfully'
         ]);
@@ -80,14 +81,15 @@ class PublicAdministrationController extends Controller
      */
     public function show(Publicadministration $publicadministration)
     {
-        if (!Auth::user()->owns($publicadministration)) {
+        if (!(Auth::user()->owns($publicadministration) OR Auth::user()->hasPermission('publicadministrations_show_all'))) {
             abort(403);
         }
 
-
-        dd($publicadministration->manager);
-        // $users = User::all();
-        // return view('pages.publicadministration.create',compact('users','publicadministration'));
+        $branches = $publicadministration->branches()->paginate();
+        $administrations = $publicadministration->administrations()->paginate();
+        $departments = $publicadministration->departments()->paginate();
+        // dd($publicadministration,$branches,$administrations,$departments);        
+        return view('pages.publicadministrations.show',compact('publicadministration','branches','administrations','departments'));
     }
 
     /**
@@ -98,6 +100,14 @@ class PublicAdministrationController extends Controller
      */
     public function edit(Publicadministration $publicadministration)
     {
+        if (!(Auth::user()->hasPermission('publicadministrations_update_all') OR Auth::user()->owns($publicadministration))) {
+            abort(403);
+        }
+        // dd($publicadministration->manager->id);
+
+        $users = (Auth::user()->hasPermission('publicadministrations_update_all')) ? User::all() : '' ;
+
+        return view('pages.publicadministrations.edit',compact('users','publicadministration'));
 
     }
 
@@ -110,17 +120,18 @@ class PublicAdministrationController extends Controller
      */
     public function update(Request $request, Publicadministration $publicadministration)
     {
-        $request->validate([
-            'name' => 'required',
-            'user_id' => 'required'
-        ]);
+        $validation_roles = (Auth::user()->hasPermission('publicadministrations_update_all')) ? ['name' => 'required','user_id' =>'required'] : ['name' => 'required'] ;
+        
+        $request->validate($validation_roles);
 
-        $publicadministration->update([
-            'name' => $request->name,
-            'user_id' => $request->user_id
-        ]);
+        $data = (Auth::user()->hasPermission('publicadministrations_update_all')) ? [
+                    'name' => $request->name,
+                    'user_id' => $request->user_id
+                ] : ['name' => $request->name] ;
 
-        return redirect()->back()->with([
+        $publicadministration->update($data);
+
+        return redirect()->route('publicadministrations.index')->with([
             'status' => 'success',
             'massage' => 'publicadministration_updated_successfully'
         ]);

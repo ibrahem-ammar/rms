@@ -11,4 +11,20 @@ class Department extends Model
 
     protected $guarded = [];
 
+    public function manager()
+    {
+        return $this->belongsTo(User::class,'user_id','id');
+    }
+
+    public function publicadministration()
+    {
+        return $this->belongsTo(Publicadministration::class,'publicadministration_id','id');
+    }
+
+    public function administration()
+    {
+        return $this->belongsTo(Administration::class,'administration_id','id');
+    }
+
+
 }

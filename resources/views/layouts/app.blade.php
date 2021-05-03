@@ -7,15 +7,24 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'reports-system') }}</title>
 
+    @yield('styles')
+
+    <link rel="stylesheet" href="  {{ asset('adminlte/plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="  {{ asset('adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+    <link href="{{ asset('adminlte/plugins/pickadate.js-3.6.2/lib/themes/classic.css') }}" rel="stylesheet">
+    <link href="{{ asset('adminlte/plugins/pickadate.js-3.6.2/lib/themes/classic.date.css') }}" rel="stylesheet">
+    <link href="{{ asset('adminlte/plugins/pickadate.js-3.6.2/lib/themes/rtl.css') }}" rel="stylesheet">
+    <!-- Sweetalert 2 -->
+    <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href=" {{ asset('adminlte/plugins/fontawesome-free/css/all.min.css') }} ">
     <!-- Theme style -->
     <link rel="stylesheet" href=" {{ asset('adminlte/dist/css/adminlte.min.css') }} ">
 
-    @yield('styles')
 
 </head>
-<body class="hold-transition sidebar-mini" dir="rtl">
+<body class="hold-transition sidebar-mini" >
 <div class="wrapper">
 
 <!-- Navbar -->
@@ -32,13 +41,16 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">@yield('title')</h1>
+                    <h1 class="m-0">@lang('site.' . request()->segment(1))</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-
-                        @yield('links')
-
+                        {{-- @php
+                            $url = request()->segments();
+                        @endphp
+                        @foreach ( $url as $segment)
+                        <li class="breadcrumb-item"><a href="{{ route( $loop->index == 0 ? $segment . '.index' : '' ) }}">@lang('site.'.$segment)</a></li>
+                        @endforeach --}}
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -70,9 +82,33 @@
     <script src=" {{ asset('adminlte/plugins/jquery/jquery.min.js') }} "></script>
     <!-- Bootstrap 4 -->
     <script src=" {{ asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }} "></script>
+
+    <script src="{{asset('adminlte/plugins/select2/js/select2.min.js')}}"></script>
+
+    {{-- Date Picker --}}
+    <script src="{{ asset('adminlte/plugins/pickadate.js-3.6.2/lib/picker.js') }}"></script>
+    <script src="{{ asset('adminlte/plugins/pickadate.js-3.6.2/lib/picker.date.js') }}"></script>
+    <script src="{{ asset('adminlte/plugins/pickadate.js-3.6.2/lib/translations/ar.js') }}"></script>
+
+
+    <!-- Sweetalert 2 -->
+
+    <script src="{{asset('adminlte/plugins/sweetalert2/sweetalert2.min.js')}}"></script>
+
+    @yield('scriptlinks')
+
     <!-- AdminLTE App -->
     <script src=" {{ asset('adminlte/dist/js/adminlte.min.js') }} "></script>
 
-    @yield('scripts')
+    @stack('scripts')
+    {{-- <script>
+        $(document).ready(function() {
+            $('.select2').select2({
+                dir: "ltr",
+                theme: 'bootstrap4'
+            })
+        });
+    </script> --}}
+
 </body>
 </html>

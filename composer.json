@@ -13,6 +13,7 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.2",
         "santigarcor/laratrust": "^6.3",
+        "ttskch/select2-bootstrap4-theme": "^1.5",
         "watson/active": "^6.0",
         "yajra/laravel-datatables": "1.5",
         "yajra/laravel-datatables-buttons": "^4.13"

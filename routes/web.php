@@ -16,7 +16,7 @@ Route::get('/password/reste/{token}', [App\Http\Controllers\Auth\ResetPasswordCo
 
 
 
-Route::get('/home', function(){
+Route::get('/home/users/help/watch', function(){
     return view('layouts.app');
 })->name('home');
 

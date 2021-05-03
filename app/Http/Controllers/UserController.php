@@ -8,6 +8,8 @@ use App\DataTables\UserDataTable;
 use App\Models\Administration;
 use App\Models\Branch;
 use App\Models\Department;
+use App\Models\Permission;
+use App\Models\Role;
 use App\Models\Publicadministration;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
@@ -74,7 +76,10 @@ class UserController extends Controller
 
         // dd($publicadministrations,$dministrations,$departments,$branches);
 
-        return view('pages.users.create');
+        $permissions = Permission::all();
+        $roles = Role::all();
+
+        return view('pages.users.create',compact('permissions','roles'));
     }
 
     /**

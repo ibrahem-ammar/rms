@@ -36,30 +36,42 @@
                     </li>
                 </ul>
             </li>
-
+            
+            
+            <!-- check if the user has the permission to see or create publicadministrations -->
+            @if (auth()->user()->hasPermission(['publicadministrations_create','publicadministrations_read']))
             <li class="nav-item {{active(['publicadministrations.*'],'menu-open')}}">
                 <a href="#" class="nav-link {{active(['publicadministrations.*'])}}">
-                <i class="nav-icon fas fa-layer-group"></i>
-                <p>
-                    @lang('site.publicadministrations')
-                    <i class="left fas fa-angle-left"></i>
-                </p>
+                    <i class="nav-icon fas fa-layer-group"></i>
+                    <p>
+                        @lang('site.publicadministrations')
+                        <i class="left fas fa-angle-left"></i>
+                    </p>
                 </a>
                 <ul class="nav nav-treeview">
+                    <!-- check if the user has the permission to add publicadministrations -->
+                    @if (auth()->user()->hasPermission('publicadministrations_create'))
                     <li class="nav-item">
                         <a href="{{ route('publicadministrations.create') }}" class="nav-link {{active(['publicadministrations.create'])}}">
                             <i class="fas fa-plus nav-icon"></i>
                             <p>@lang('site.add')</p>
                         </a>
                     </li>
+                    @endif
+                    <!-- check if the user has the permission to see publicadministrations -->
+                    @if (auth()->user()->hasPermission('publicadministrations_read')) 
                     <li class="nav-item">
                         <a href="{{ route('publicadministrations.index') }}" class="nav-link {{active(['publicadministrations.index'])}}">
-                        <i class="fas fa-eye nav-icon"></i>
-                        <p>@lang('site.show')</p>
+                            <i class="fas fa-eye nav-icon"></i>
+                            <p>@lang('site.show')</p>
                         </a>
                     </li>
+                    @endif
+                    
                 </ul>
             </li>
+            @endif
+            
 
             <li class="nav-item {{active(['branches.*'],'menu-open')}}">
                 <a href="#" class="nav-link {{active(['branches.*'])}}">
