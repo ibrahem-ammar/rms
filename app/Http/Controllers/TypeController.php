@@ -7,6 +7,15 @@ use Illuminate\Http\Request;
 
 class TypeController extends Controller
 {
+    public function __construct()
+    {
+        // adding middleware to tasks status
+
+        $this->middleware(['permission:types_create'])->only(['create','store']);
+        $this->middleware(['permission:types_update'])->only(['edit','update']);
+        $this->middleware(['permission:types_read'])->only('index');
+        $this->middleware(['permission:types_delete'])->only('destroy');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +23,10 @@ class TypeController extends Controller
      */
     public function index()
     {
-        //
+        $types = Type::paginate();
+
+        // dd($types);
+        return view('pages.types.index',compact('types'));
     }
 
     /**
@@ -24,7 +36,8 @@ class TypeController extends Controller
      */
     public function create()
     {
-        //
+        return view('pages.types.create');
+        
     }
 
     /**
@@ -35,7 +48,15 @@ class TypeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate(['type' => 'required']);
+
+
+        Type::create(['type' => $request->type]);
+
+        return redirect()->route('types.index')->with([
+            'status' => 'success',
+            'massage' => 'type_added_successfully'
+        ]);
     }
 
     /**
@@ -46,7 +67,8 @@ class TypeController extends Controller
      */
     public function show(Type $type)
     {
-        //
+        $tasks = $type->tasks()->paginate();
+        return view('pages.types.show',compact('type','tasks'));
     }
 
     /**
@@ -57,7 +79,7 @@ class TypeController extends Controller
      */
     public function edit(Type $type)
     {
-        //
+        return view('pages.types.edit',compact('type'));
     }
 
     /**
@@ -69,7 +91,14 @@ class TypeController extends Controller
      */
     public function update(Request $request, Type $type)
     {
-        //
+        $request->validate(['type' => 'required']);
+
+        $type->update(['type' => $request->type]);
+
+        return redirect()->route('types.index')->with([
+            'status' => 'success',
+            'massage' => 'type_updated_successfully'
+        ]);
     }
 
     /**

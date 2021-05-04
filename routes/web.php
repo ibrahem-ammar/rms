@@ -21,6 +21,7 @@ Route::get('/home/users/help/watch', function(){
 })->name('home');
 
 Route::middleware(['auth'])->group(function () {
+    Route::post('statuses/search', [App\Http\Controllers\StatusController::class,'search'])->name('statuses.search');
 
     Route::resource('publicadministrations', App\Http\Controllers\PublicAdministrationController::class);
 
@@ -33,6 +34,12 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('users', App\Http\Controllers\UserController::class);
 
     Route::resource('tasks', App\Http\Controllers\TaskController::class);
+
+    Route::resource('types', App\Http\Controllers\TypeController::class);
+
+    Route::resource('statuses', App\Http\Controllers\StatusController::class);
+
+
 
     Route::resource('reports', App\Http\Controllers\ReportController::class);
 

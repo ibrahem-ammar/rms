@@ -8,14 +8,16 @@
     <title>{{ config('app.name', 'reports-system') }}</title>
 
     @yield('styles')
-
+{{--
     <link rel="stylesheet" href="  {{ asset('adminlte/plugins/select2/css/select2.min.css') }}">
     <link rel="stylesheet" href="  {{ asset('adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
     <link href="{{ asset('adminlte/plugins/pickadate.js-3.6.2/lib/themes/classic.css') }}" rel="stylesheet">
     <link href="{{ asset('adminlte/plugins/pickadate.js-3.6.2/lib/themes/classic.date.css') }}" rel="stylesheet">
     <link href="{{ asset('adminlte/plugins/pickadate.js-3.6.2/lib/themes/rtl.css') }}" rel="stylesheet">
     <!-- Sweetalert 2 -->
-    <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}"> --}}
+    <link href="{{ asset('adminlte/plugins/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('adminlte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}" rel="stylesheet">
 
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href=" {{ asset('adminlte/plugins/fontawesome-free/css/all.min.css') }} ">
@@ -45,12 +47,7 @@
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        {{-- @php
-                            $url = request()->segments();
-                        @endphp
-                        @foreach ( $url as $segment)
-                        <li class="breadcrumb-item"><a href="{{ route( $loop->index == 0 ? $segment . '.index' : '' ) }}">@lang('site.'.$segment)</a></li>
-                        @endforeach --}}
+                        {{-- still wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww --}}
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -80,35 +77,25 @@
 
     <!-- jQuery -->
     <script src=" {{ asset('adminlte/plugins/jquery/jquery.min.js') }} "></script>
+
     <!-- Bootstrap 4 -->
     <script src=" {{ asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }} "></script>
 
-    <script src="{{asset('adminlte/plugins/select2/js/select2.min.js')}}"></script>
+    <script src=" {{ asset('adminlte/plugins/datatables/jquery.dataTables.min.js') }} "></script>
+    <script src=" {{ asset('adminlte/plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }} "></script>
+    <script src=" {{ asset('adminlte/plugins/datatables-buttons/js/buttons.html5.min.js') }} "></script>
+    <script src=" {{ asset('adminlte/plugins/datatables-buttons/js/buttons.print.min.js') }} "></script>
+    <script src=" {{ asset('adminlte/plugins/datatables-buttons/js/dataTables.buttons.min.js') }} "></script>
+    <script src=" {{ asset('adminlte/plugins/datatables-buttons/js/buttons.flash.min.js') }} "></script>
 
-    {{-- Date Picker --}}
-    <script src="{{ asset('adminlte/plugins/pickadate.js-3.6.2/lib/picker.js') }}"></script>
-    <script src="{{ asset('adminlte/plugins/pickadate.js-3.6.2/lib/picker.date.js') }}"></script>
-    <script src="{{ asset('adminlte/plugins/pickadate.js-3.6.2/lib/translations/ar.js') }}"></script>
+    <script src=" {{ asset('adminlte/plugins/datatables/dataTables.bootstrap4.min.js') }} "></script>
 
+    <script src="{{ asset('vendor/datatables/buttons.server-side.js') }}"></script>
+    @stack('scripts')
 
-    <!-- Sweetalert 2 -->
-
-    <script src="{{asset('adminlte/plugins/sweetalert2/sweetalert2.min.js')}}"></script>
-
-    @yield('scriptlinks')
 
     <!-- AdminLTE App -->
     <script src=" {{ asset('adminlte/dist/js/adminlte.min.js') }} "></script>
-
-    @stack('scripts')
-    {{-- <script>
-        $(document).ready(function() {
-            $('.select2').select2({
-                dir: "ltr",
-                theme: 'bootstrap4'
-            })
-        });
-    </script> --}}
 
 </body>
 </html>

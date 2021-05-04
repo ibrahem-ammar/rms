@@ -33,24 +33,26 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(UserDataTable $userDataTable)
     {
         // return $userDataTable->render('pages.users.show');
-        $modelsKeys = array_keys(Config::get('laratrust.user_models'));
-        $modelKey = $request->get('model') ?? $modelsKeys[0] ?? null;
-        $userModel = Config::get('laratrust.user_models')[$modelKey] ?? null;
+        // $modelsKeys = array_keys(Config::get('laratrust.user_models'));
+        // $modelKey = $request->get('model') ?? $modelsKeys[0] ?? null;
+        // $userModel = Config::get('laratrust.user_models')[$modelKey] ?? null;
 
-        if (!$userModel) {
-            abort(404);
-        }
+        // if (!$userModel) {
+        //     abort(404);
+        // }
 
-        return View::make('pages.users.index', [
-            'models' => $modelsKeys,
-            'modelKey' => $modelKey,
-            'users' => $userModel::query()
-                ->withCount(['roles', 'permissions'])
-                ->simplePaginate(10),
-        ]);
+        // return View::make('pages.users.index', [
+        //     'models' => $modelsKeys,
+        //     'modelKey' => $modelKey,
+        //     'users' => $userModel::query()
+        //         ->withCount(['roles', 'permissions'])
+        //         ->simplePaginate(10),
+        // ]);
+
+        return $userDataTable->render('pages.users.index');
     }
 
     /**

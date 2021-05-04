@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Publicadministration;
 use App\Models\User;
+use App\DataTables\PublicadministrationDataTable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laratrust\Laratrust;
@@ -25,16 +26,17 @@ class PublicAdministrationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(PublicadministrationDataTable $publicadministrations)
     {
-        if (Auth::user()->hasPermission('publicadministrations_read_all')) {
-            $publicadministrations = Publicadministration::paginate();
-        } else {
-            $publicadministrations = Auth::user()->publicadministrations()->paginate();
-        }
+
+        // if (Auth::user()->hasPermission('publicadministrations_read_all')) {
+        //     $publicadministrations = Publicadministration::paginate();
+        // } else {
+        //     $publicadministrations = Auth::user()->publicadministrations()->paginate();
+        // }
 
         // dd($publicadministrations);
-        return view('pages.publicadministrations.index',compact('publicadministrations'));
+        return $publicadministrations->render('pages.publicadministrations.index');
     }
 
     /**
@@ -88,7 +90,7 @@ class PublicAdministrationController extends Controller
         $branches = $publicadministration->branches()->paginate();
         $administrations = $publicadministration->administrations()->paginate();
         $departments = $publicadministration->departments()->paginate();
-        // dd($publicadministration,$branches,$administrations,$departments);        
+        // dd($publicadministration,$branches,$administrations,$departments);
         return view('pages.publicadministrations.show',compact('publicadministration','branches','administrations','departments'));
     }
 
@@ -121,7 +123,7 @@ class PublicAdministrationController extends Controller
     public function update(Request $request, Publicadministration $publicadministration)
     {
         $validation_roles = (Auth::user()->hasPermission('publicadministrations_update_all')) ? ['name' => 'required','user_id' =>'required'] : ['name' => 'required'] ;
-        
+
         $request->validate($validation_roles);
 
         $data = (Auth::user()->hasPermission('publicadministrations_update_all')) ? [

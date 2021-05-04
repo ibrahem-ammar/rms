@@ -7,6 +7,15 @@ use Illuminate\Http\Request;
 
 class StatusController extends Controller
 {
+    public function __construct()
+    {
+        // adding middleware to tasks status
+
+        $this->middleware(['permission:statuses_create'])->only(['create','store']);
+        $this->middleware(['permission:statuses_update'])->only(['edit','update']);
+        $this->middleware(['permission:statuses_read'])->only('index');
+        $this->middleware(['permission:statuses_delete'])->only('destroy');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +23,11 @@ class StatusController extends Controller
      */
     public function index()
     {
-        //
+        $statuses = Status::paginate();
+
+        // dd($statuses);
+        return view('pages.statuses.index',compact('statuses'));
+
     }
 
     /**
@@ -24,7 +37,7 @@ class StatusController extends Controller
      */
     public function create()
     {
-        //
+        return view('pages.statuses.create');
     }
 
     /**
@@ -35,7 +48,15 @@ class StatusController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate(['status' => 'required']);
+
+
+        Status::create(['status' => $request->status]);
+
+        return redirect()->route('statuses.index')->with([
+            'status' => 'success',
+            'massage' => 'status_added_successfully'
+        ]);
     }
 
     /**
@@ -46,7 +67,44 @@ class StatusController extends Controller
      */
     public function show(Status $status)
     {
-        //
+        $tasks = $status->tasks()->paginate();
+        return view('pages.statuses.show',compact('status','tasks'));
+    }
+
+    public function search(Request $request)
+    {
+        $search = $request->search;
+
+        if ($search == '') {
+            $statuses = Status::orderBy('status','ASC')
+                ->select('id','status')
+                ->get();
+        } else {
+            $statuses = Status::orderBy('status','ASC')
+                ->select('id','status')
+                ->where('status','LIKE','%'.$search. '%')
+                ->get();
+        }
+
+        return $statuses->toJson();
+
+        // $response = array();
+
+        // foreach ($statuses as $status) {
+        //     $response[] = array(
+        //         'id' => $status->id,
+        //         'status' => $status->status,
+        //     );
+        // }
+
+        // $response = json_encode($statuses);
+
+        // echo json_encode($response);
+
+        // exit;
+
+        // return $response;
+
     }
 
     /**
@@ -57,8 +115,9 @@ class StatusController extends Controller
      */
     public function edit(Status $status)
     {
-        //
+        return view('pages.statuses.edit',compact('status'));
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -69,7 +128,14 @@ class StatusController extends Controller
      */
     public function update(Request $request, Status $status)
     {
-        //
+        $request->validate(['status' => 'required']);
+
+        $status->update(['status' => $request->status]);
+
+        return redirect()->route('statuses.index')->with([
+            'status' => 'success',
+            'massage' => 'status_updated_successfully'
+        ]);
     }
 
     /**

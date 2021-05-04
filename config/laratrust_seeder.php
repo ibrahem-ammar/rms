@@ -20,6 +20,8 @@ return [
             'departments' => 'c,r,u,d,ra,ua,da,sa',
             'branchs' => 'c,r,u,d,ra,ua,da,sa',
             'tasks' => 'c,r,u,d,ra,ua,da,sa',
+            'types' => 'c,r,u,d,s',
+            'statuses' => 'c,r,u,d,s',
             'reports' => 'c,r,u,d,ra,ua,da,sa',
             'settings' => 'r,u',
         ],
