@@ -22,6 +22,7 @@ Route::get('/home/users/help/watch', function(){
 
 Route::middleware(['auth'])->group(function () {
     Route::post('statuses/search', [App\Http\Controllers\StatusController::class,'search'])->name('statuses.search');
+    Route::post('types/search', [App\Http\Controllers\TypeController::class,'search'])->name('types.search');
 
     Route::resource('publicadministrations', App\Http\Controllers\PublicAdministrationController::class);
 

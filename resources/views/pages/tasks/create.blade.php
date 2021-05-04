@@ -82,11 +82,6 @@
                                 <select class="form-control type" name="type_id" id="type_id" required>
                                     <option value="" selected disabled hidden>@lang('site.select_type')</option>
 
-                                    {{-- @forelse ($types as $type)
-                                        <option value="{{ $type->id }}">{{ $type->name }}</option>
-                                    @empty
-                                        <option value="">@lang('site.no_types')</option>
-                                    @endforelse --}}
                                 </select>
                             </div>
                         </div>
@@ -99,11 +94,6 @@
                                 <select class="form-control status" name="status_id" id="status_id" required>
                                     <option value="" selected disabled hidden>@lang('site.select_status')</option>
 
-                                    {{-- @forelse ($statuses as $status)
-                                        <option value="{{ $status->id }}">{{ $status->name }}</option>
-                                    @empty
-                                        <option value="">@lang('site.no_status')</option>
-                                    @endforelse --}}
                                 </select>
                             </div>
                         </div>
@@ -180,6 +170,7 @@
                     url: "{{ route('statuses.search') }}",
                     type: "post",
                     dataType: "json",
+                    delay: 250,
                     data: function (params) {
                         return {
                             _token: CSRF_TOKEN,
@@ -189,7 +180,12 @@
 
                     processResults: function (response) {
                         return {
-                            results: response
+                            results: $.map(response,function (taskStatus) {
+                                return {
+                                    text: taskStatus.status,
+                                    id: taskStatus.id,
+                                }
+                            })
                         };
                     },
                     cache: true,
@@ -199,59 +195,60 @@
 
             $('.type').select2({
                 dir: "ltr",
+
                 theme: 'bootstrap4',
-                // ajax: {
-                //     url: "{{ route('statuses.search') }}",
-                //     type: "post",
-                //     dataType: "json",
-                //     data: function (params) {
-                //         return {
-                //             _token: CSRF_TOKEN,
-                //             search: params.term
-                //         };
-                //     },
-                //     processResults: function (response) {
-                //         return {
-                //             results: response
-                //         };
-                //     },
-                //     cache: true
-                // },
+
+                ajax: {
+                    url: "{{ route('types.search') }}",
+                    type: "post",
+                    dataType: "json",
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            _token: CSRF_TOKEN,
+                            search: params.term
+                        };
+                    },
+
+                    processResults: function (response) {
+                        return {
+                            results: $.map(response,function (tasktype) {
+                                return {
+                                    text: tasktype.type,
+                                    id: tasktype.id,
+                                }
+                            })
+                        };
+                    },
+                    cache: true,
+                },
+
             });
 
+            function formAlert(form,type,title,message,confirmColor,cancelColor) {
+                Swal.fire({
+                    title: title,
+                    text: message,
+                    icon: type,
+                    showCancelButton: true,
+                    confirmButtonColor: confirmColor,
+                    cancelButtonColor: cancelColor,
+                    cancelButtonText: "{{ trans('site.cancel') }}",
+                    confirmButtonText: "{{ trans('site.confirm') }}"
+                    }).then((result) => {
+                    if (result.isConfirmed) {
+                        $(form).submit();
+                    }
+                });
+            }
 
             $(document).on('click','.cancel',function(){
-                Swal.fire({
-                title: "{{ trans('site.are_you_sure') }}",
-                text: "{{ trans('site.unable_to_revert') }}",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                cancelButtonText: "{{ trans('site.cancel') }}",
-                confirmButtonText: "{{ trans('site.confirm') }}"
-                }).then((result) => {
-                if (result.isConfirmed) {
-                    $('#cancel').submit();
-                }
-            })
+                formAlert('#submit','question',"{{ trans('site.are_you_sure') }}","{{ trans('site.unable_to_revert') }}",'#d33','#28a745');
+
             });
 
-
             $(document).on('click','.add',function(){
-                Swal.fire({
-                title: "{{ trans('site.are_you_sure') }}",
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#28a745',
-                cancelButtonColor: '#d33',
-                cancelButtonText: "{{ trans('site.cancel') }}",
-                confirmButtonText: "{{ trans('site.confirm') }}"
-                }).then((result) => {
-                if (result.isConfirmed) {
-                    $('#submit').submit();
-                }
-            })
+                formAlert('#submit','question',"{{ trans('site.are_you_sure') }}","",'#d33','#28a745');
             });
 
             $('.pickadate').pickadate({

@@ -37,7 +37,7 @@ class TypeController extends Controller
     public function create()
     {
         return view('pages.types.create');
-        
+
     }
 
     /**
@@ -69,6 +69,25 @@ class TypeController extends Controller
     {
         $tasks = $type->tasks()->paginate();
         return view('pages.types.show',compact('type','tasks'));
+    }
+
+    public function search(Request $request)
+    {
+        $search = $request->search;
+
+        if ($search == '') {
+            $types = Type::orderBy('type','ASC')
+                ->select('id','type')
+                ->get();
+        } else {
+            $types = Type::orderBy('type','ASC')
+                ->select('id','type')
+                ->where('type','LIKE','%'.$search. '%')
+                ->get();
+        }
+
+        return response()->json($types);
+
     }
 
     /**

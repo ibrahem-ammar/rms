@@ -86,24 +86,7 @@ class StatusController extends Controller
                 ->get();
         }
 
-        return $statuses->toJson();
-
-        // $response = array();
-
-        // foreach ($statuses as $status) {
-        //     $response[] = array(
-        //         'id' => $status->id,
-        //         'status' => $status->status,
-        //     );
-        // }
-
-        // $response = json_encode($statuses);
-
-        // echo json_encode($response);
-
-        // exit;
-
-        // return $response;
+        return response()->json($statuses);
 
     }
 
