@@ -2,19 +2,19 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
+// Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
 
-Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login']);
+// Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login']);
 
-Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
+// Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
-Route::post('/password/email', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
-Route::get('/password/reste', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
-Route::post('/password/reste', [App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('password.update');
+// Route::post('/password/email', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+// Route::get('/password/reste', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+// Route::post('/password/reste', [App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('password.update');
 
-Route::get('/password/reste/{token}', [App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+// Route::get('/password/reste/{token}', [App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 
-
+Auth::routes();
 
 Route::get('/home/users/help/watch', function(){
     return view('layouts.app');
@@ -22,7 +22,14 @@ Route::get('/home/users/help/watch', function(){
 
 Route::middleware(['auth'])->group(function () {
     Route::post('statuses/search', [App\Http\Controllers\StatusController::class,'search'])->name('statuses.search');
+
     Route::post('types/search', [App\Http\Controllers\TypeController::class,'search'])->name('types.search');
+
+    Route::post('administrations/search', [App\Http\Controllers\AdministrationController::class,'search'])->name('administrations.search');
+
+    Route::post('departments/search', [App\Http\Controllers\DepartmentController::class,'search'])->name('departments.search');
+
+    Route::post('users/search', [App\Http\Controllers\UserController::class,'search'])->name('users.search');
 
     Route::resource('publicadministrations', App\Http\Controllers\PublicAdministrationController::class);
 

@@ -97,8 +97,27 @@ class AdministrationController extends Controller
         }
 
         $departments = $administration->departments()->paginate();
-        // dd($administration,$departments);  
+        // dd($administration,$departments);
         return view('pages.administrations.show',compact('departments','administration'));
+    }
+
+    public function search(Request $request)
+    {
+        $search = $request->search;
+
+        if ($search == '') {
+            $administrations = Administration::orderBy('name','ASC')
+                ->select('id','name')
+                ->get();
+        } else {
+            $administrations = Administration::orderBy('name','ASC')
+                ->select('id','name')
+                ->where('name','LIKE','%'.$search. '%')
+                ->get();
+        }
+
+        return response()->json($administrations);
+
     }
 
     /**
@@ -134,7 +153,7 @@ class AdministrationController extends Controller
         $validation_roles = (Auth::user()->hasPermission('administrations_update_all')) ? ['name' => 'required'
             ,'user_id' =>'required','publicadministration_id' =>'required',
             'branch_id' =>'required',] : ['name' => 'required'] ;
-        
+
         $request->validate($validation_roles);
 
         $data = (Auth::user()->hasPermission('administrations_update_all')) ? [

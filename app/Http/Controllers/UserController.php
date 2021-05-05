@@ -111,6 +111,25 @@ class UserController extends Controller
         dd($user);
     }
 
+    public function search(Request $request)
+    {
+        $search = $request->search;
+
+        if ($search == '') {
+            $users = User::orderBy('name','ASC')
+                ->select('id','name')
+                ->get();
+        } else {
+            $users = User::orderBy('name','ASC')
+                ->select('id','name')
+                ->where('name','LIKE','%'.$search. '%')
+                ->get();
+        }
+
+        return response()->json($users);
+
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

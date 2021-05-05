@@ -1,8 +1,14 @@
 @extends('layouts.app')
 
 @section('styles')
-<!-- Tempusdominus Bootstrap 4 -->
-<link rel="stylesheet" href="{{ asset('adminlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }} ">
+
+    <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+    <link rel="stylesheet" href="  {{ asset('adminlte/plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="  {{ asset('adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminlte/plugins/pickadate.js-3.6.2/lib/themes/classic.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminlte/plugins/pickadate.js-3.6.2/lib/themes/classic.date.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminlte/plugins/pickadate.js-3.6.2/lib/themes/rtl.css') }}">
+
 @endsection
 
 @section('content')
@@ -13,13 +19,13 @@
                 <form action=" {{route('tasks.store')}} " method="post" id="submit">
                     @csrf
                     <div class="row">
-                        {{-- <div class="col-6">
-                            <!-- select the administration of the task -->
+                        <div class="col-md-6 col-sm-12">
+                            <!-- select the section of the task -->
 
                             <div class="form-group">
-                                <label for="section">@lang('site.section')</label>
+                                <label for="section">@lang('site.task_section')</label>
                                 <select class="form-control select2" name="section" id="section" data-select="#section_id">
-                                    <option value="" selected disabled hidden>@lang('site.select_section')</option>
+                                    <option value="" selected disabled hidden>@lang('site.choose')</option>
                                     <option value="user">@lang('site.user')</option>
                                     <option value="department">@lang('site.department')</option>
                                     <option value="administration">@lang('site.administration')</option>
@@ -27,41 +33,20 @@
                             </div>
                         </div>
 
-                        <div class="col-6">
-                            <!-- select the department of the task -->
+                        <div class="col-md-6 col-sm-12">
+                            <!-- select the owner of the task -->
 
                             <div class="form-group">
-                                <label for="section_id">@lang('site.department')</label>
+                                <label for="section_id">@lang('site.choose') -</label>
                                 <select class="form-control select2" name="section_id" id="section_id" required disabled>
                                     <option value="" selected disabled hidden>@lang('site.select_section')</option>
 
-                                    {{-- @forelse ($departments as $department)
-                                        <option value="{{ $department->id }}">{{ $department->name }}</option>
-                                    @empty
-                                        <option value="">@lang('site.no_departments')</option>
-                                    @endforelse
+
                                 </select>
                             </div>
-                        </div> --}}
+                        </div>
 
-                        {{-- <div class="col-6">
-                            <!-- select the user of the task -->
-
-                            <div class="form-group">
-                                <label for="user_id">@lang('site.user')</label>
-                                <select class="form-control select2" name="user_id" id="user_id" required>
-                                    <option value="" selected disabled hidden>@lang('site.select_user')</option>
-
-                                    {{-- @forelse ($users as $user)
-                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                    @empty
-                                        <option value="">@lang('site.no_users')</option>
-                                    @endforelse
-                                </select>
-                            </div>
-                        </div> --}}
-
-                        <div class="col-6">
+                        <div class="col-md-6 col-sm-12">
                             <!-- name of task -->
                             <div class="form-group">
                                 <label for="name">@lang('site.task_name')</label>
@@ -74,7 +59,7 @@
                             </div>
                         </div>
 
-                        <div class="col-6">
+                        <div class="col-md-6 col-sm-12">
                             <!-- select the type of the task -->
 
                             <div class="form-group">
@@ -86,13 +71,78 @@
                             </div>
                         </div>
 
-                        <div class="col-6">
+                        <div class="col-md-6 col-sm-12">
                             <!-- select the status of the task -->
 
                             <div class="form-group">
                                 <label for="status_id">@lang('site.status')</label>
                                 <select class="form-control status" name="status_id" id="status_id" required>
                                     <option value="" selected disabled hidden>@lang('site.select_status')</option>
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-12">
+                            <!-- select the start date of the task -->
+
+                            <div class="form-groub">
+                                <label for="start_date">@lang('site.start_date')</label>
+                                <input type="text" name="start_date"
+                                style="cursor: pointer;" id="start_date"
+                                placeholder="@lang('site.start_date')"
+                                class="form-control pickadate" readable>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-12">
+                            <!-- select the deadline of the task -->
+
+                            <div class="form-groub">
+                                <label for="deadline">@lang('site.deadline')</label>
+                                <input type="text" name="deadline"
+                                style="cursor: pointer;" id="deadline"
+                                placeholder="@lang('site.deadline')"
+                                class="form-control pickadate" readable>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-6 col-sm-12">
+                            <!-- select the working hours of the task -->
+
+                            <div class="form-groub">
+                                <label for="working_hours">@lang('site.working_hours')</label>
+                                <select class="form-control" name="working_hours" id="working_hours">
+                                    <option value="" selected disabled hidden>@lang('site.working_hours')</option>
+                                    @for ($i = 1; $i < 8; $i++)
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                    @endfor
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-12">
+                            <!-- select the benefit administration of the task -->
+
+                            <div class="form-group">
+                                <label for="benefit_administration_id">@lang('site.benefitadministration')</label>
+                                <select class="form-control benefitadministration" name="benefit_administration_id" id="benefit_administration_id" required>
+                                    <option value="" selected disabled hidden>@lang('site.benefitadministration')</option>
+
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-12">
+                            <!-- select the user of the task -->
+
+                            <div class="form-group">
+                                <label for="user_id">@lang('site.user')</label>
+                                <select class="form-control user" name="user_id" id="user_id" required>
+                                    <option value="" selected disabled hidden>@lang('site.select_user')</option>
+
 
                                 </select>
                             </div>
@@ -108,32 +158,6 @@
                                     id="note" name="note">{{ old('note') }}</textarea>
                             </div>
                         </div>
-
-                        {{-- <div class="col-6">
-                            <!-- select the public administration of the task -->
-
-                            <div class="form-groub">
-                                <label for="start_date">@lang('site.start_date')</label>
-                                <input type="text" name="start_date" style="cursor: pointer;" id="start_date" class="form-control pickadate" readable>
-                            </div>
-                        </div> --}}
-
-                        {{-- <div class="col-6">
-                            <!-- select the public administration of the departmet -->
-
-                            <div class="form-group">
-                                <label for="administration_id">@lang('site.select_administration')</label>
-                                <select class="form-control select2" name="administration_id" id="administration_id" required>
-                                    <option value="" selected disabled hidden>@lang('site.select_administration')</option>
-
-                                    @forelse ($administrations as $administration)
-                                        <option value="{{ $administration->id }}">{{ $administration->name }}</option>
-                                    @empty
-                                        <option value="">@lang('site.no_administrations')</option>
-                                    @endforelse
-                                </select>
-                            </div>
-                        </div> --}}
                     </div>
 
                     <div class="row">
@@ -158,6 +182,13 @@
 
 
 @push('scripts')
+
+<script src=" {{ asset('adminlte/plugins/select2/js/select2.full.min.js') }} "></script>
+<script src="{{ asset('adminlte/plugins/pickadate.js-3.6.2/lib/picker.js') }}"></script>
+<script src="{{ asset('adminlte/plugins/pickadate.js-3.6.2/lib/picker.date.js') }}"></script>
+<script src="{{ asset('adminlte/plugins/pickadate.js-3.6.2/lib/translations/ar.js') }}"></script>
+<script src=" {{ asset('adminlte/plugins/sweetalert2/sweetalert2.min.js') }} "></script>
+
    <script>
         $(document).ready(function() {
             var CSRF_TOKEN = $("meta[name='csrf-token']").attr('content');
@@ -260,8 +291,124 @@
             });
 
             $(document).on('change','#section',function () {
-				$($(this).data('select')).removeAttr('disabled');
+                var section = $(this).val();
+                var labelText = '';
+                var searchUrl = '';
+
+                if (section == 'administration') {
+                    labelText = "{{ trans('site.select_administration') }}";
+                    searchUrl = "{{ route('administrations.search') }}";
+                }
+                if (section == 'department') {
+                    labelText = "{{ trans('site.select_department') }}";
+                    searchUrl = "{{ route('departments.search') }}";
+                }
+                if (section == 'user') {
+                    labelText = "{{ trans('site.select_user') }}";
+                    searchUrl = "{{ route('users.search') }}";
+                }
+				var taskOwnerElement= $($(this).data('select'));
+                taskOwnerElement.siblings()[0].innerHTML = labelText;
+                taskOwnerElement.removeAttr('disabled');
+
+                taskOwnerElement.select2({
+                dir: "ltr",
+
+                theme: 'bootstrap4',
+
+                ajax: {
+                    url: searchUrl,
+                    type: "post",
+                    dataType: "json",
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            _token: CSRF_TOKEN,
+                            search: params.term
+                        };
+                    },
+
+                    processResults: function (response) {
+                        return {
+                            results: $.map(response,function (sectionData) {
+                                return {
+                                    text: sectionData.name,
+                                    id: sectionData.id,
+                                }
+                            })
+                        };
+                    },
+                    cache: true,
+                },
+
+            });
+
 			});
+
+            $('.benefitadministration').select2({
+                dir: "ltr",
+
+                theme: 'bootstrap4',
+
+                ajax: {
+                    url: "{{ route('administrations.search') }}",
+                    type: "post",
+                    dataType: "json",
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            _token: CSRF_TOKEN,
+                            search: params.term
+                        };
+                    },
+
+                    processResults: function (response) {
+                        return {
+                            results: $.map(response,function (administration) {
+                                return {
+                                    text: administration.name,
+                                    id: administration.id,
+                                }
+                            })
+                        };
+                    },
+                    cache: true,
+                },
+
+            });
+
+            $('.user').select2({
+                dir: "ltr",
+
+                theme: 'bootstrap4',
+
+                ajax: {
+                    url: "{{ route('users.search') }}",
+                    type: "post",
+                    dataType: "json",
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            _token: CSRF_TOKEN,
+                            search: params.term
+                        };
+                    },
+
+                    processResults: function (response) {
+                        return {
+                            results: $.map(response,function (user) {
+                                return {
+                                    text: user.name,
+                                    id: user.id,
+                                }
+                            })
+                        };
+                    },
+                    cache: true,
+                },
+
+            });
+
 
         });
     </script>

@@ -7,11 +7,21 @@ return [
     'setting' => 'الاعدادات',
     'logout' => 'تسجيل الخروج',
 
+
+    'choose' => 'أختر',
     'add' => 'اضف',
     'show' => 'عرض',
     'cancel'=> 'خروج',
     'submit' => 'تسجيل',
-
+    ///////// login
+    'login'=> 'تسجيل الدخول',
+    'email'=> 'البريد الالكتروني',
+    'password'=> 'كلمة المرور',
+    'remember_me'=> '! تذكرني',
+    'forget_password'=> 'نسيت كلمة المرور ؟',
+    ///////// forget password
+    'password_reset' => 'اعادة ضبط كلمة المرور',
+    'send_password_reset_link' => 'ارسل رابط استعادة كلمة المرور',
     ////////alerts
     'unable_to_revert' => 'لن تكون قادرا علي استعادة البيانات ؟',
     'are_you_sure' => 'هل انت متأكد ؟',
@@ -33,6 +43,7 @@ return [
     'no_administrations' => 'لا يوجد ادارات',
     'select_administration_manager' => 'مدير الادارة',
     'select_administration' => 'أختر ادارة',
+    'benefitadministration' => 'الادارة المستفيدة',
 
     ///////// branch
     'branches' => 'الفروع',
@@ -63,7 +74,6 @@ return [
     'id_number' => 'رقم الهوية',
     'job' => 'الوظيفة',
     'working_at' => 'مكان العمل',
-    'choose' => 'مكان العمل',
     'select_user' => 'اختر مستخدم',
     'select_manager' => 'مدير الادارة العامة',
     'no_users' => 'لا يوجد مستخدمين',
@@ -74,6 +84,11 @@ return [
     'add_task' => 'أضف مهمة',
     'task_name'=> 'اسم المهمة',
     'note' => 'ملاحظة',
+    'task_section' => ' المهمة تابعة ل',
+    'start_date' => 'تاريخ البداية',
+    'select_date' => 'أختر وقت',
+    'deadline' => 'تاريخ النهاية',
+    'working_hours' => 'ساعات العمل',
 
     ///////// task type
     'type' => 'النوع',

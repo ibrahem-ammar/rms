@@ -85,8 +85,27 @@ class DepartmentController extends Controller
         }
 
         // $departments = $administration->departments()->paginate();
-        // // dd($administration,$departments);  
+        // // dd($administration,$departments);
         // return view('pages.administrations.show',compact('departments','administration'));
+    }
+
+    public function search(Request $request)
+    {
+        $search = $request->search;
+
+        if ($search == '') {
+            $departments = Department::orderBy('name','ASC')
+                ->select('id','name')
+                ->get();
+        } else {
+            $departments = Department::orderBy('name','ASC')
+                ->select('id','name')
+                ->where('name','LIKE','%'.$search. '%')
+                ->get();
+        }
+
+        return response()->json($departments);
+
     }
 
     /**
@@ -97,7 +116,7 @@ class DepartmentController extends Controller
      */
     public function edit(Department $department)
     {
-        
+
         if (!(Auth::user()->hasPermission('administrations_update_all') OR Auth::user()->owns($department))) {
             abort(403);
         }
@@ -109,7 +128,7 @@ class DepartmentController extends Controller
             $users = User::all();
         }
         return view('pages.departments.edit',compact('department','administrations','users','publicadministrations'));
-    
+
     }
 
     /**
@@ -124,7 +143,7 @@ class DepartmentController extends Controller
         $validation_roles = (Auth::user()->hasPermission('departments_update_all')) ? ['name' => 'required'
             ,'user_id' =>'required','publicadministration_id' =>'required',
             'administration_id' =>'required',] : ['name' => 'required'] ;
-        
+
         $request->validate($validation_roles);
 
         $data = (Auth::user()->hasPermission('departments_update_all')) ? [
